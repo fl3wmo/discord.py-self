@@ -337,10 +337,11 @@ def parse_timestamp(timestamp: Optional[float]) -> Optional[datetime.datetime]:
 
 def copy_doc(original: Callable[..., Any]) -> Callable[[T], T]:
     def decorator(overridden: T) -> T:
-        overridden.__doc__ = original.__doc__
-        overridden.__signature__ = _signature(original)  # type: ignore
+        if hasattr(original, '__doc__'):
+            overridden.__doc__ = original.__doc__
+        if hasattr(original, '__signature__'):
+            overridden.__signature__ = original.__signature__
         return overridden
-
     return decorator
 
 
